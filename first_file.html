@@ -5,6 +5,8 @@
 		<script src="bootstrap/js/bootstrap.min.js"></script>
 		<script src="main.js"></script>
 		
+
+		
 		
 	</head>
 	<body>	
@@ -14,7 +16,7 @@
 		
 	        <ul class="nav navbar-nav">
               <li class="active" ><a id="firstLink" href="#">Home</a></li>
-              <li><a href="#">Profile</a></li>
+              <li><a href="#" id="secondLink">Profile</a></li>
 			  <li><a href="#">Portfolio</a></li>			 
             </ul>		
 		
@@ -32,9 +34,14 @@
 			</div>			
 		</div>
 		
-
+		
+		<div id="notMe"><p>id="notMe"</p></div>
+		<div id="myDiv">id="myDiv"</div>
 		
 		
+		<script>
+			$( "#myDiv" ).css( "border", "3px solid red" );
+		</script>
 		
 	</body>
 </html>
