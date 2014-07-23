@@ -1,6 +1,13 @@
-$("#firstLink").click(function() {console.log("hi")});
+jQuery( document ).ready(function( ) {
+	$("#Home").click(function() {console.log("hi")});
 
-$("#secondLink").html( "Next Step..." );
+	$("#Profile").html( "Next Step..." );
 
-console.log($("#secondLink"));
-console.log($("#firstLink"));
+	console.log($("#secondLink"));
+	console.log($("#firstLink"));
+
+	$( "#myDiv" ).css( "border", "3px solid red" );
+});
+
+
+
