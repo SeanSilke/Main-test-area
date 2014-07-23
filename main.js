@@ -1,12 +1,32 @@
 jQuery( document ).ready(function( ) {
-	$("#Home").click(function() {console.log("hi")});
 
-	$("#Profile").html( "Next Step..." );
+	var last = $("#Home");
+	$("#myDiv").html("Home");
 
-	console.log($("#secondLink"));
-	console.log($("#firstLink"));
 
-	$( "#myDiv" ).css( "border", "3px solid red" );
+	$("#Home").click(function() {
+			$("#myDiv").html("Home");
+			console.log($(this));
+			last.removeClass("active")
+			$(this).addClass("active")
+			last = $(this);			
+		});
+		
+	$("#Profile").click(function() {
+			$("#myDiv").html("Profile");
+			$(this).addClass("active")
+			last.removeClass("active")
+			last = $(this);
+			
+		});
+
+	$("#Portfolio").click(function() {
+			$("#myDiv").html("Portfolio");
+			$(this).addClass("active")
+			last.removeClass("active")
+			last = $(this);			
+		});	
+	
 });
 
 
