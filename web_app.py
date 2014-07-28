@@ -1,9 +1,10 @@
 import tornado.ioloop
 import tornado.web
+import time
 
 class MainHandler(tornado.web.RequestHandler):
     def get(self):
-        self.write("Hello, world")
+        self.write("Hello, curent time: " + time.asctime( time.localtime(time.time()) ))
 
 application = tornado.web.Application([
     (r"/", MainHandler),
