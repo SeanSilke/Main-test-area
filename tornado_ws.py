@@ -37,6 +37,10 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
 #var ws = new WebSocket("ws://localhost:8888/websocket");
 #ws.send('Hi')
 class EchoWebSocket(tornado.websocket.WebSocketHandler):
+    def check_origin(self, origin):
+        print origin 
+        return True
+    
     def open(self):
         print "WebSocket opened"
 
