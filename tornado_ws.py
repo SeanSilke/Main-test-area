@@ -34,6 +34,8 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
             del clients[self.id]
 '''
 
+#var ws = new WebSocket("ws://localhost:8888/websocket");
+#ws.send('Hi')
 class EchoWebSocket(tornado.websocket.WebSocketHandler):
     def open(self):
         print "WebSocket opened"
