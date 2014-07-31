@@ -39,6 +39,9 @@ class ChatWebSocket(tornado.websocket.WebSocketHandler):
     def check_origin(self, origin):        
         return True
 
+    def check_origin(self, origin):        
+        return True
+
 app = tornado.web.Application([
     (r'/websocket', ChatWebSocket),
 ])
