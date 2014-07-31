@@ -25,7 +25,7 @@ class ChatWebSocket(tornado.websocket.WebSocketHandler):
 
     def on_message(self, message):
         for client in clients:
-        	if client == self:
+        	if client == self:	
         		client.write_message(u"You said: " + message)
         	else:
         		client.write_message(u"Other one said: " + message)
@@ -33,6 +33,8 @@ class ChatWebSocket(tornado.websocket.WebSocketHandler):
 
     def on_close(self):
         print "WebSocket closed"
+        clients.remove(self)
+
 
     def check_origin(self, origin):        
         return True
