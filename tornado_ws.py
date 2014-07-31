@@ -6,60 +6,42 @@ from tornado.options import define, options, parse_command_line
 
 define("port", default=8888, help="run on the given port", type=int)
 
-# we gonna store clients in dictionary..
-clients = dict()
+# dictionary to store clients in 
+clients = []
 
-'''
-class IndexHandler(tornado.web.RequestHandler):
-    @tornado.web.asynchronous
-    def get(self):
-        self.write("This is your response")
-        self.finish()
+"""
+ JavaScript line to make connection
+ //var ws = new WebSocket("ws://localhost:8888/websocket");
+ var ws = new WebSocket("ws://sergey-vn:8888/websocket");
+ ws.onmessage = function(evn){console.log(evn.data)}
+ ws.send('Hi')
+"""
 
-class WebSocketHandler(tornado.websocket.WebSocketHandler):
-    def open(self, *args):
-        self.id = self.get_argument("Id")
-        self.stream.set_nodelay(True)
-        clients[self.id] = {"id": self.id, "object": self}
-
-    def on_message(self, message):        
-        """
-        when we receive some message we want some message handler..
-        for this example i will just print message to console
-        """
-        print "Client %s received a message : %s" % (self.id, message)
-        
-    def on_close(self):
-        if self.id in clients:
-            del clients[self.id]
-'''
-
-#var ws = new WebSocket("ws://localhost:8888/websocket");
-#ws.send('Hi')
-class EchoWebSocket(tornado.websocket.WebSocketHandler):
-    def check_origin(self, origin):
-        print origin 
-        return True
-    
+class ChatWebSocket(tornado.websocket.WebSocketHandler):    
     def open(self):
-        print "WebSocket opened"
+        print "WebSocket opened"   
+#        self.id = self.get_argument("Id")
+        clients.append(self)        
 
     def on_message(self, message):
-        self.write_message(u"You said: " + message)
-	print(message);
+        for client in clients:
+        	if client == self:
+        		client.write_message(u"You said: " + message)
+        	else:
+        		client.write_message(u"Other one said: " + message)
+        print(message);
 
     def on_close(self):
         print "WebSocket closed"
 
+    def check_origin(self, origin):        
+        return True
+
 app = tornado.web.Application([
-#   (r'/', IndexHandler),
-#   (r'/', WebSocketHandler),
-    (r'/websocket', EchoWebSocket),
+    (r'/websocket', ChatWebSocket),
 ])
 
 if __name__ == '__main__':
     parse_command_line()
     app.listen(options.port)
     tornado.ioloop.IOLoop.instance().start()
-
-
