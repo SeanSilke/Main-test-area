@@ -1,13 +1,16 @@
+import logging
 import tornado.ioloop
 import tornado.web
 import tornado.websocket
 
-from tornado.options import define, options, parse_command_line
+from tornado.options import define, options
 
 define("port", default=8888, help="run on the given port", type=int)
 
-# dictionary to store clients in 
-clients = []
+
+class MainHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.render("chat.html")
 
 """
  JavaScript line to make connection
@@ -17,34 +20,40 @@ clients = []
  ws.send('Hi')
 """
 
-class ChatWebSocket(tornado.websocket.WebSocketHandler):    
-    def open(self):
-        print "WebSocket opened"   
-#        self.id = self.get_argument("Id")
-        clients.append(self)        
+class ChatWebSocket(tornado.websocket.WebSocketHandler):
+    waiters = set()
 
-    def on_message(self, message):
-        for client in clients:
-        	if client == self:
-        		client.write_message(u"You said: " + message)
-        	else:
-        		client.write_message(u"Other one said: " + message)
-        print(message);
+    def open(self):
+        logging.info("WebSocket opened")
+        ChatWebSocket.waiters.add(self) 
 
     def on_close(self):
-        print "WebSocket closed"
-        clients.remove(self)
-
+        logging.info("WebSocket closed")
+        ChatWebSocket.waiters.remove(self)
 
     def check_origin(self, origin):        
         return True
 
+    @classmethod  
+    def send_updates(cls, message):
+        logging.info("sending message to %d waiters", len(cls.waiters))
+        for waiter in cls.waiters:            
+            try:
+                waiter.write_message(message)
+            except:
+                logging.error("Error sending message", exc_info=True)        
+
+    def on_message(self, message):
+        ChatWebSocket.send_updates(message)
+
+
 
 app = tornado.web.Application([
+    (r"/", MainHandler),
     (r'/websocket', ChatWebSocket),
 ])
 
 if __name__ == '__main__':
-    parse_command_line()
+    tornado.options.parse_command_line()
     app.listen(options.port)
     tornado.ioloop.IOLoop.instance().start()
