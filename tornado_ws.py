@@ -2,23 +2,28 @@ import logging
 import tornado.ioloop
 import tornado.web
 import tornado.websocket
+import os
 
 from tornado.options import define, options
 
 define("port", default=8888, help="run on the given port", type=int)
 
 
+class Application(tornado.web.Application):
+    def __init__(self):
+        handlers = [    
+            (r"/", MainHandler),
+            (r"/static/(.*)", tornado.web.StaticFileHandler, {'path': "/home/sergey/Main-test-area/static"}),
+            (r'/websocket', ChatWebSocket),    
+        ]
+        tornado.web.Application.__init__(self, handlers)
+
+
+
 class MainHandler(tornado.web.RequestHandler):
     def get(self):
         self.render("chat.html")
 
-"""
- JavaScript line to make connection
- //var ws = new WebSocket("ws://localhost:8888/websocket");
- var ws = new WebSocket("ws://sergey-vn:8888/websocket");
- ws.onmessage = function(evn){console.log(evn.data)}
- ws.send('Hi')
-"""
 
 class ChatWebSocket(tornado.websocket.WebSocketHandler):
     waiters = set()
@@ -46,14 +51,8 @@ class ChatWebSocket(tornado.websocket.WebSocketHandler):
     def on_message(self, message):
         ChatWebSocket.send_updates(message)
 
-
-
-app = tornado.web.Application([
-    (r"/", MainHandler),
-    (r'/websocket', ChatWebSocket),
-])
-
 if __name__ == '__main__':
     tornado.options.parse_command_line()
+    app = Application()
     app.listen(options.port)
     tornado.ioloop.IOLoop.instance().start()
