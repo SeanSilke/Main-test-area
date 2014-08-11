@@ -25,10 +25,9 @@ jQuery( document ).ready(function( ) {
 	$("#send").click(function () {
 		ws.send($("#input").val())
 	})
-  
 
-	$("#send2").click(function () {
-		console.log( $("#input").val());
+	$("#clear").click(function () {
+		$("#myContainer").html(" ");
 	})
 
 	ws.onmessage = function(evn){
