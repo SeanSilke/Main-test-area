@@ -6,10 +6,7 @@ import os
 import re
 
 
-
-
-from tornado.httpclient import HTTPClient
-from tornado.httpclient import AsyncHTTPClient
+from tornado.httpclient import HTTPClient, AsyncHTTPClient
 from tornado.options import define, options
 from tornado import gen
 from tornado.web import asynchronous
@@ -72,15 +69,48 @@ class ChatWebSocket(tornado.websocket.WebSocketHandler):
         def handle_response(response):            
             cls.send("request_time: " + str(response.request_time))
         response = http_client.fetch(url, callback=handle_response)
+
+    @classmethod
+    @gen.coroutine 
+    def gen_task_fetch(cls, url):
+        logging.info("asynchronous fetching url: %s", url)
+        http_client = AsyncHTTPClient()
+        response = yield gen.Task(http_client.fetch, url)        
+        logging.info("request_time: %s", response.request_time)
+        cls.send("request_time: " + str(response.request_time)) 
+
     
     @classmethod    
-    @gen.coroutine 
+#    @gen.coroutine
+    @gen.engine 
     def fetch_coroutine(cls,url):
-        logging.info("fetching url: %s", url)
+        print tornado.ioloop.IOLoop.instance().time()
+        logging.info("whait 5s")          
+        yield gen.Task(tornado.ioloop.IOLoop.instance().call_later, 5)
+        print tornado.ioloop.IOLoop.instance().time()
         http_client = AsyncHTTPClient()
+        logging.info("1 fetching url: %s", url)
         response = yield http_client.fetch(url)
+#        response = yield gen.Task(http_client.fetch, url)  
         logging.info("request_time: %s", response.request_time)      
         cls.send("request_time: " + str(response.request_time))
+        logging.info("2 fetching url: %s", url)     
+#        response = yield http_client.fetch(url)
+        response = yield gen.Task(http_client.fetch, url)  
+        logging.info("request_time: %s", response.request_time)      
+        cls.send("request_time: " + str(response.request_time))
+        logging.info("3 fetching url: %s", url)
+#        response = yield http_client.fetch(url)
+        response = yield gen.Task(http_client.fetch, url)  
+        logging.info("request_time: %s", response.request_time)      
+        cls.send("request_time: " + str(response.request_time))
+        logging.info("4 fetching url: %s", url)
+#        response = yield http_client.fetch(url)
+        response = yield gen.Task(http_client.fetch, url)  
+        logging.info("request_time: %s", response.request_time)      
+        cls.send("request_time: " + str(response.request_time))
+       
+
 
 
 
@@ -94,6 +124,8 @@ class ChatWebSocket(tornado.websocket.WebSocketHandler):
             ChatWebSocket.asynchronous_fetch(match.group(2))
         elif match and match.group(1) == 'gafetch':
             ChatWebSocket.fetch_coroutine(match.group(2))
+        elif match and match.group(1) == 'tfetch':
+            ChatWebSocket.gen_task_fetch(match.group(2))    
         else:
             self.write_message(message + "<em> is not valid command</em>")
        
