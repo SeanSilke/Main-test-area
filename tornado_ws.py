@@ -32,7 +32,18 @@ class MainHandler(tornado.web.RequestHandler):
 
 class ChatWebSocket(tornado.websocket.WebSocketHandler):
     waiters = set()
-#    command_dict = {"send":send}
+    command_dict = {"send":"send",
+                    "fetch":"synchronous_fetch",
+                    "afetch":"asynchronous_fetch",
+                    "gafetch":"fetch_coroutine",
+                    "tfetch":"gen_task_fetch", }
+    @classmethod  
+    def get_dict(cls):
+        return    {"send":cls.send,
+                    "fetch":cls.synchronous_fetch,
+                    "afetch":cls.asynchronous_fetch,
+                    "gafetch":cls.fetch_coroutine,
+                    "tfetch":cls.gen_task_fetch, }
 
     def open(self):
         logging.info("WebSocket opened")
@@ -89,31 +100,28 @@ class ChatWebSocket(tornado.websocket.WebSocketHandler):
         yield gen.Task(tornado.ioloop.IOLoop.instance().call_later, 5)
         print tornado.ioloop.IOLoop.instance().time()
         http_client = AsyncHTTPClient()
-        logging.info("1 fetching url: %s", url)
+        logging.info("fetching url: %s", url)
         response = yield http_client.fetch(url)
 #        response = yield gen.Task(http_client.fetch, url)  
         logging.info("request_time: %s", response.request_time)      
         cls.send("request_time: " + str(response.request_time))
-        logging.info("2 fetching url: %s", url)     
-#        response = yield http_client.fetch(url)
-        response = yield gen.Task(http_client.fetch, url)  
-        logging.info("request_time: %s", response.request_time)      
-        cls.send("request_time: " + str(response.request_time))
-        logging.info("3 fetching url: %s", url)
-#        response = yield http_client.fetch(url)
-        response = yield gen.Task(http_client.fetch, url)  
-        logging.info("request_time: %s", response.request_time)      
-        cls.send("request_time: " + str(response.request_time))
-        logging.info("4 fetching url: %s", url)
-#        response = yield http_client.fetch(url)
-        response = yield gen.Task(http_client.fetch, url)  
-        logging.info("request_time: %s", response.request_time)      
-        cls.send("request_time: " + str(response.request_time))
-       
+
+
+    def on_message(self, message): 
+    # the command without body like - "send: " and "send:" are handled incorrectly now        
+        match = re.search(r"(^\w+):\s(.+$)", message)        
+        if match:
+            if match and match.group(1) in self.command_dict:
+                command = getattr(self, self.command_dict[match.group(1)]) 
+                command(match.group(2))
+            else:
+                self.write_message('"'+ match.group(1)+'"' + "<em> is not valid command</em>")  
+        else:
+            self.write_message('"'+ message+'"' + "<em> is not a command</em>")         
 
 
 
-
+"""
     def on_message(self, message):        
         match = re.search(r"(^\w+):\s(.+$)", message)        
         if match and match.group(1) == 'send':
@@ -128,7 +136,8 @@ class ChatWebSocket(tornado.websocket.WebSocketHandler):
             ChatWebSocket.gen_task_fetch(match.group(2))    
         else:
             self.write_message(message + "<em> is not valid command</em>")
-       
+"""
+     
 
 if __name__ == '__main__':
     tornado.options.parse_command_line()
