@@ -56,6 +56,18 @@ class ChatWebSocket(tornado.websocket.WebSocketHandler):
     def check_origin(self, origin):        
         return True
 
+    def on_message(self, message): 
+    # the command without body like - "send: " and "send:" are handled incorrectly now        
+        match = re.search(r"(^\w+):\s(.+$)", message)        
+        if match:
+            if match and match.group(1) in self.command_dict:
+                command = getattr(self, self.command_dict[match.group(1)]) 
+                command(match.group(2))
+            else:
+                self.write_message('"'+ match.group(1)+'"' + "<em> is not valid command</em>")  
+        else:
+            self.write_message('"'+ message+'"' + "<em> is not a command</em>")    
+
     @classmethod  
     def send(cls, message):
 #        cls.command_dict["send"]= cls.send
@@ -105,20 +117,6 @@ class ChatWebSocket(tornado.websocket.WebSocketHandler):
 #        response = yield gen.Task(http_client.fetch, url)  
         logging.info("request_time: %s", response.request_time)      
         cls.send("request_time: " + str(response.request_time))
-
-
-    def on_message(self, message): 
-    # the command without body like - "send: " and "send:" are handled incorrectly now        
-        match = re.search(r"(^\w+):\s(.+$)", message)        
-        if match:
-            if match and match.group(1) in self.command_dict:
-                command = getattr(self, self.command_dict[match.group(1)]) 
-                command(match.group(2))
-            else:
-                self.write_message('"'+ match.group(1)+'"' + "<em> is not valid command</em>")  
-        else:
-            self.write_message('"'+ message+'"' + "<em> is not a command</em>")         
-
 
 
 """
