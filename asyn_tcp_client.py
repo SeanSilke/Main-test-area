@@ -31,7 +31,7 @@ def add_to_buffer(data):
 def my_print(data):
 	print data
 
-def receiver_login(socket,login = 'a', password = 'b'):
+def receiver_login(socket,login = 'a', password = 'b', callback):
 	state = 'login'
 	global my_buffer	
 	while state != 'success':
@@ -50,6 +50,10 @@ def receiver_login(socket,login = 'a', password = 'b'):
 socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 socket.connect((TCP_IP, TCP_PORT))
 
-receiver_login(socket)
+#receiver_login(socket)
 
-send_messages(socket,message_list = [COMMAND])
+#send_messages(socket,message_list = [COMMAND])
+
+print 'ioloop started'
+time.sleep(500)
+

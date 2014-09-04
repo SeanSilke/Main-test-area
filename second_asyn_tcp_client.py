@@ -46,9 +46,6 @@ def asyn_receiver_login(socket,callback):
 	recv_async(socket,1024,first_callback)
 
 
-
-
-
 socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 socket.connect((TCP_IP, TCP_PORT))
 

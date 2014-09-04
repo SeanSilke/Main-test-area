@@ -42,5 +42,3 @@ socket.connect((TCP_IP, TCP_PORT))
 receiver_login(socket)
 
 send_messages(socket,message_list = [COMMAND])
-
-#send_messages(socket,message_list)
