@@ -2,13 +2,6 @@ import threading
 import socket 
 import time
 
-
-TCP_IP = '172.30.0.42'
-TCP_PORT = 8002
-
-COMMAND = 'print,/par/net/ip:on'
-
-
 def recv_async(socket,bytes, callback):
    def wrapper():
        data = socket.recv(bytes)
@@ -45,13 +38,16 @@ def asyn_receiver_login(socket,callback):
 		process_data(socket, callback,data,buff,state)
 	recv_async(socket,1024,first_callback)
 
+TCP_IP = '172.30.0.42'
+TCP_PORT = 8002
+COMMAND = 'print,/par/net/ip:on'
 
 socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 socket.connect((TCP_IP, TCP_PORT))
 
 def login_callback():	
 	print 'connected'
-	socket.send('print,/par/net/ip:on' + '\n')
+	socket.send(COMMAND + '\n')
 	def callback(data):
 		print data
 	recv_async(socket,1024,callback)
