@@ -4,7 +4,7 @@ jQuery( document ).ready(function( ) {
 	var composeMessage = function(text){
 	//
 	// login "ip" "port"
-	// send "message"
+	// send "" "message"
 	// 
 	//currently messages with multiple whitespace not processed correctly.
 	//Message body will contain only text before second whitespace.
@@ -18,11 +18,12 @@ jQuery( document ).ready(function( ) {
 				msg.port =  list [2];
 				break;
 			case 'send':
-				msg.type = 'send'
-				msg.message = list[1]
+				msg.type = 'send';
+				msg.receiver = list[1];
+				msg.message = list[2];
 				break;
 			default:
-				msg = {}
+				msg = {};
 		}
 		console.log(JSON.stringify(msg))
 		return msg;
