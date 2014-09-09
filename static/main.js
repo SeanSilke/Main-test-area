@@ -2,9 +2,9 @@
 jQuery( document ).ready(function( ) {
 
 	var composeMessage = function(text){
-	//
-	// login "ip" "port"
-	// send "receiver" "message"
+	// 
+	// login "ip" "port" "login" "password"
+	// send "receiver" "message" 
 	// 
 	//currently messages with multiple whitespace not processed correctly.
 	//Message body will contain only text before second whitespace.
