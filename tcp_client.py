@@ -1,17 +1,16 @@
 import socket 
 import time
 
-TCP_IP = '172.30.0.42'
+TCP_IP = u'172.30.0.42'
 TCP_PORT = 8002
 
-LOGIN = 'a'
-PASSWORD = 'b'
-COMMAND = 'print,/par/net/ip:on'
-message_list = ['',LOGIN,PASSWORD,COMMAND]
+LOGIN = u'a'
+PASSWORD = u'b'
+COMMAND = u'print,/par/net/ip:on'
 
 
 
-def receiver_login(socket,login = 'a', password = 'b'):
+def receiver_login(socket,login = u'a', password = u'b'):
 	state = 'login'
 	my_buffer = ''
 	while state != 'success':
