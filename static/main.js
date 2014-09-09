@@ -4,7 +4,7 @@ jQuery( document ).ready(function( ) {
 	var composeMessage = function(text){
 	//
 	// login "ip" "port"
-	// send "" "message"
+	// send "receiver" "message"
 	// 
 	//currently messages with multiple whitespace not processed correctly.
 	//Message body will contain only text before second whitespace.
@@ -15,7 +15,9 @@ jQuery( document ).ready(function( ) {
 			case 'login':
 				msg.type = 'login'
 				msg.ip = list[1];
-				msg.port =  list [2];
+				msg.port =  Number(list[2]);
+				msg.login = list[3];
+				msg.password = list [4];
 				break;
 			case 'send':
 				msg.type = 'send';
@@ -55,7 +57,7 @@ jQuery( document ).ready(function( ) {
 	})
 
 	$("#loginData").click(function () {	
-		$("#input").val("login 172.30.0.42 8002");
+		$("#input").val("login 172.30.0.42 8002 a b");
 	})
 
 	$("#commandData").click(function () {
