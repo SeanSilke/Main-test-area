@@ -29,7 +29,7 @@ class Receiver():
 		callback('event','connecting')
 		buff = ''
 		while self.state != 'logged':
-			buff += yield stream.read_bytes(1024,  partial=True) #Should we remove partiona = True?			
+			buff += yield stream.read_bytes(1024,  partial=True) #Should we remove "partiona = True?"
 			callback('send',buff)
 			if  self.state == 'connecting' and'login:' in buff:
 				yield stream.write(self.login + '\n')
@@ -67,8 +67,10 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
 
 	def on_close(self):
 		print "WebSocket is closed"
-		for receiver in self.receiver_dict:
-			receiver.close()
+		print "this receiver was created in this session:"
+		for receiver_id in self.receiver_dict:
+			print  " receiver_id", receiver_id
+			self.receiver_dict[receiver_id].Close()
 
 	def open(self):
 		print "New WebSocket is open"
