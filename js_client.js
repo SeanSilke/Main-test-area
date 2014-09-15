@@ -42,12 +42,12 @@ jQuery( document ).ready(function( ) {
 			ws.send(JSON.stringify(message))			
 		}
 
-		var reciever_dom_elem = $( '<form>\
+		var reciever_dom_elem = $( '<div>\
 					<div class = "row">	\
-						<div class="col-xs-11">\
+						<div class="col-xs-10">\
 							<h4 class="header"> Receiver 1 </h4>\
 						</div>\
-						<div class="col-xs-1">\
+						<div class="col-xs-2">\
 							<button type="button" class="btn btn-default btn-block close_button">Close</button>\
 						</div>\
 					</div>\
@@ -70,7 +70,7 @@ jQuery( document ).ready(function( ) {
 							</div>\
 						</div>\
 					</fieldset>\
-				</form>')
+				</div>')
 
 		var header = reciever_dom_elem.find(".header")		
 		header.html("Receiver " + reciever_id)

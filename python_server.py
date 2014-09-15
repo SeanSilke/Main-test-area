@@ -13,6 +13,7 @@ class Receiver():
 		print ip,port,login,password, "end"
 		self.state = 'init'
 		self.tcp_stream = None
+		self.buff = ''
 
 		self.callback = callback
 		self.TCP_IP = ip
@@ -21,26 +22,33 @@ class Receiver():
 		self.password = str(password)
 
 	@gen.coroutine
+	def streaming_callback(self, data):
+		print data
+		self.buff+=data
+
+	@gen.coroutine
 	def Login(self):
 		client = tornado.tcpclient.TCPClient()
 		stream = yield client.connect(self.TCP_IP, self.TCP_PORT)
 		callback = self.callback
 		self.state = 'connecting'
-		callback('event','connecting')
-		buff = ''
+		callback('event','connecting')			
 		while self.state != 'logged':
-			buff += yield stream.read_bytes(1024,  partial=True) #Should we remove "partiona = True?"
-			callback('send',buff)
-			if  self.state == 'connecting' and'login:' in buff:
+			print "hello1"
+			yield stream.read_bytes(1024, streaming_callback = self.streaming_callback)
+			print "hello2"
+			#self.buff += yield stream.read_bytes(1024,  partial=True) #Should we remove "partiona = True?"
+			callback('send',self.buff)
+			if  self.state == 'connecting' and'login:' in self.buff:
 				yield stream.write(self.login + '\n')
-				buff = ''
+				self.buff = ''
 				self.state = "password"
 				callback('event','login_in')
-			if  self.state =='password' and 'Password:' in buff:
+			if  self.state =='password' and 'Password:' in self.buff:
 				yield stream.write(self.password + '\n')
-				buff = ''
+				self.buff = ''
 				self.state = 'approval'
-			if  self.state == 'approval' and "Logged in on" in buff:
+			if  self.state == 'approval' and "Logged in on" in self.buff:
 				self.state = 'logged'
 				print 'Successfull Connect '
 				callback('event','logged')
