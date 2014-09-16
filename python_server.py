@@ -22,11 +22,6 @@ class Receiver():
 		self.password = str(password)
 
 	@gen.coroutine
-	def streaming_callback(self, data):
-		print data
-		self.buff+=data
-
-	@gen.coroutine
 	def Login(self):
 		client = tornado.tcpclient.TCPClient()
 		stream = yield client.connect(self.TCP_IP, self.TCP_PORT)
@@ -34,10 +29,7 @@ class Receiver():
 		self.state = 'connecting'
 		callback('event','connecting')			
 		while self.state != 'logged':
-			print "hello1"
-			yield stream.read_bytes(1024, streaming_callback = self.streaming_callback)
-			print "hello2"
-			#self.buff += yield stream.read_bytes(1024,  partial=True) #Should we remove "partiona = True?"
+			self.buff += yield stream.read_bytes(1024,  partial=True) #Should we remove "partiona = True?"
 			callback('send',self.buff)
 			if  self.state == 'connecting' and'login:' in self.buff:
 				yield stream.write(self.login + '\n')
@@ -63,9 +55,13 @@ class Receiver():
 	@gen.coroutine
 	def Write(self,command = 'print,/par/net/ip/addr:on'):
 		yield self.tcp_stream.write(command + '\n')
-		data = yield self.tcp_stream.read_bytes(1024,  partial=True)
-		print 'response: ',str(data)
-		self.callback('send',data)
+		def callback(data):
+			print data
+			self.callback('send',data)
+		def streaming_callback(data):
+			print data
+			self.callback('send',data)
+		self.tcp_stream.read_until_close(callback= callback,streaming_callback=streaming_callback)
 
 
 class WebSocketHandler(tornado.websocket.WebSocketHandler):
