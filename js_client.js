@@ -71,11 +71,14 @@ jQuery( document ).ready(function( ) {
 					<fieldset disabled>\
 						<div class="form-group">\
 							<div class = "row">\
-								<div class="col-xs-10">\
+								<div class="col-xs-8">\
 									<input class="form-control input_field" placeholder = "Enter command">\
 								</div>\
 								<div class="col-xs-2">\
 									<button type="button" class="btn btn-default btn-block enter_button">Enter</button>\
+								</div>\
+								<div class="col-xs-2">\
+									<button type="button" class="btn btn-default btn-block clear_button">Clear</button>\
 								</div>\
 							</div>\
 						</div>\
@@ -102,6 +105,11 @@ jQuery( document ).ready(function( ) {
 		var r_print = function(data){
 			output_field.append(data + "<br>");
 		}
+
+		var clear_button = reciever_dom_elem.find(".clear_button")
+		clear_button.click(function(){
+			output_field.html('')
+		})
 
 		var enter_button = reciever_dom_elem.find(".enter_button")
 		var input_field = reciever_dom_elem.find(".input_field")
