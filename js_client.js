@@ -134,7 +134,7 @@ jQuery( document ).ready(function( ) {
 		}
 
 		recievers_dict[reciever_id] = reciever
-		$('.main_panel').append(reciever.reciever_dom_elem);
+		$('.main_panel').prepend(reciever.reciever_dom_elem);
 	}
 
 	var default_loggin_data = function(){
