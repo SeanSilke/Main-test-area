@@ -29,7 +29,7 @@ class Receiver():
 		self.state = 'connecting'
 		callback('event','connecting')			
 		while self.state != 'logged':
-			self.buff += yield stream.read_bytes(1024,  partial=True) #Should we remove "partiona = True?"
+			self.buff += yield stream.read_bytes(1024,  partial=True)
 			callback('send',self.buff)
 			if  self.state == 'connecting' and'login:' in self.buff:
 				yield stream.write(self.login + '\n')
