@@ -45,6 +45,13 @@ class Receiver():
 				print 'Successfull Connect '
 				callback('event','logged')
 		self.tcp_stream = stream
+		def callback(data):
+			print data
+			self.callback('send',data)
+		def streaming_callback(data):
+			print data
+			self.callback('send',data)
+		self.tcp_stream.read_until_close(callback= callback,streaming_callback=streaming_callback)
 
 	@gen.coroutine
 	def Close(self):
@@ -55,14 +62,6 @@ class Receiver():
 	@gen.coroutine
 	def Write(self,command = 'print,/par/net/ip/addr:on'):
 		yield self.tcp_stream.write(command + '\n')
-		def callback(data):
-			print data
-			self.callback('send',data)
-		def streaming_callback(data):
-			print data
-			self.callback('send',data)
-		self.tcp_stream.read_until_close(callback= callback,streaming_callback=streaming_callback)
-
 
 class WebSocketHandler(tornado.websocket.WebSocketHandler):
 	def __init__(self, *args, **kwargs):
