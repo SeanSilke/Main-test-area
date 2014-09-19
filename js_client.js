@@ -46,95 +46,58 @@ jQuery( document ).ready(function( ) {
 		var msg = {id: reciever_id,
 					type: 'init',
 					data: data}		
-		reciever_factory(reciever_id)
+		new reciever_constructor(reciever_id)
 		ws.send(JSON.stringify(msg))
 		reciever_id += 1
+		console.log(reciever_id)
 	}	
 
-	var reciever_factory = function(reciever_id){		
-		var callback = function(type, data){						
-			var message = {id: reciever_id,
-						type: type,
-						data: data}
-			ws.send(JSON.stringify(message))			
-		}
+	var reciever_constructor = function(reciever_id){
 
-		var reciever_dom_elem = $( '<div>\
-					<div class = "row">	\
-						<div class="col-xs-10">\
-							<h4 class="header"> Receiver 1 </h4>\
-						</div>\
-						<div class="col-xs-2">\
-							<button type="button" class="btn btn-default btn-block close_button">Close</button>\
-						</div>\
-					</div>\
-					<fieldset disabled>\
-						<div class="form-group">\
-							<div class = "row">\
-								<div class="col-xs-8">\
-									<input class="form-control input_field" placeholder = "Enter command">\
-								</div>\
-								<div class="col-xs-2">\
-									<button type="button" class="btn btn-default btn-block enter_button">Enter</button>\
-								</div>\
-								<div class="col-xs-2">\
-									<button type="button" class="btn btn-default btn-block clear_button">Clear</button>\
-								</div>\
-							</div>\
-						</div>\
-						<div class="form-group">\
-							<div class="row">\
-								<div class="col-md-12">\
-									<div class="well output_field"> </div>\
-								</div>\
-							</div>\
-						</div>\
-					</fieldset>\
-				</div>')
+		var that = this
+		this.dom_elem = $($(".template").html())
 
-		var header = reciever_dom_elem.find(".header")
-		header.html("Receiver " + reciever_id)
+		this.header = this.dom_elem.find(".header")
+		this.header.html("Receiver " + reciever_id)
 
-		var fieldset = reciever_dom_elem.find("fieldset")
-		var enable = function(){
+		this.output_field = this.dom_elem.find(".output_field")
+		this.enter_button = this.dom_elem.find(".enter_button")
+		this.clear_button = this.dom_elem.find(".clear_button")
+		this.close_button = this.dom_elem.find(".close_button")
+		this.input_field = this.dom_elem.find(".input_field")
+
+		this.enable = function(){
+			var fieldset = this.dom_elem.find("fieldset")
 			fieldset.removeAttr( "disabled" )
 		}
 
-
-		var output_field = reciever_dom_elem.find('.output_field')
-		var r_print = function(data){
-			output_field.append(data + "<br>");
+		this.r_print = function (data){
+			this.output_field.append(data + "<br>");
 		}
 
-		var clear_button = reciever_dom_elem.find(".clear_button")
-		clear_button.click(function(){
-			output_field.html('')
+		this.callback = function(type, data){
+			var message = {id: reciever_id,
+						type: type,
+						data: data}
+			ws.send(JSON.stringify(message))
+		}
+
+		this.enter_button.click(function(){
+			var text = that.input_field.val()
+			that.callback('send',text)
 		})
 
-		var enter_button = reciever_dom_elem.find(".enter_button")
-		var input_field = reciever_dom_elem.find(".input_field")
-
-		enter_button.click(function () {
-			var text = input_field.val()
-			callback('send',text)
+		this.close_button.click(function(){
+			that.dom_elem.remove()
+			that.callback('close',' ')
+		})
+		this.clear_button.click(function(){
+			that.output_field.html('')
 		})
 
-		var close = function () {
-			reciever_dom_elem.remove()
-			callback('close',' ')
-		}
-		var close_button = reciever_dom_elem.find(".close_button")
-		close_button.click(close)
+		recievers_dict[reciever_id] = this
+		$('.main_panel').prepend(this.dom_elem);
 
-		var reciever = {
-			reciever_dom_elem:reciever_dom_elem,
-			r_print: r_print,
-			enable: enable,
-			close: close
-		}
-
-		recievers_dict[reciever_id] = reciever
-		$('.main_panel').prepend(reciever.reciever_dom_elem);
 	}
 
 	var default_loggin_data = function(){
