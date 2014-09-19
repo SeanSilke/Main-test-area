@@ -27,7 +27,7 @@ class Receiver():
 		stream = yield client.connect(self.TCP_IP, self.TCP_PORT)
 		callback = self.callback
 		self.state = 'connecting'
-		callback('event','connecting')			
+		callback('event','connecting')
 		while self.state != 'logged':
 			self.buff += yield stream.read_bytes(1024,  partial=True)
 			callback('send',self.buff)
