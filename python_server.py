@@ -26,26 +26,6 @@ class Receiver():
 		client = tornado.tcpclient.TCPClient()
 		stream = yield client.connect(self.TCP_IP, self.TCP_PORT)
 		callback = self.callback
-		'''
-		self.state = 'connecting'
-		callback('event','connecting')
-		while self.state != 'logged':
-			self.buff += yield stream.read_bytes(1024,  partial=True)
-			callback('send',self.buff)
-			if  self.state == 'connecting' and'login:' in self.buff:
-				yield stream.write(self.login + '\n')
-				self.buff = ''
-				self.state = "password"
-				callback('event','login_in')
-			if  self.state =='password' and 'Password:' in self.buff:
-				yield stream.write(self.password + '\n')
-				self.buff = ''
-				self.state = 'approval'
-			if  self.state == 'approval' and "Logged in on" in self.buff:
-				self.state = 'logged'
-				print 'Successfull Connect '
-				callback('event','logged')
-		'''
 		self.tcp_stream = stream
 		def callback(data):
 			print data

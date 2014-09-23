@@ -14,8 +14,8 @@ jQuery( document ).ready(function( ) {
 		}
 
 		newWs.onopen = function(){
-			$("fieldset").first().removeAttr("disabled")
 			//$("fieldset").first().removeAttr("disabled")
+			$("fieldset").first().removeAttr("disabled")
 			$('H3').html('Connected to the server')
 		}
 
@@ -60,6 +60,9 @@ jQuery( document ).ready(function( ) {
 		this.header = this.dom_elem.find(".header")
 		this.header.html("Receiver " + reciever_id)
 
+		this.login_buf = ' '
+		this.state = 'login'
+
 		this.output_field = this.dom_elem.find(".output_field")
 		this.enter_button = this.dom_elem.find(".enter_button")
 		this.clear_button = this.dom_elem.find(".clear_button")
@@ -72,6 +75,24 @@ jQuery( document ).ready(function( ) {
 		}
 
 		this.r_print = function (data){
+			if (this.state == 'login'){
+				this.login_buf += data
+				console.log(this.login_buf)
+				if(this.login_buf.indexOf('login:') >= 0){
+					that.callback('send','a')
+					this.login_buf = ' '
+				}
+				if (this.login_buf.indexOf('Password:') >= 0) {
+                    that.callback('send','b')
+                    this.login_buf = ''
+                }
+                if (this.login_buf.indexOf('Logged in on') >= 0) {
+                    this.state = 'logged';
+                    this.login_buf = ''
+                    this.enable()
+                }
+			}
+
 			this.output_field.append(data + "<br>");
 		}
 
