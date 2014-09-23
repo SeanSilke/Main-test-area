@@ -10,7 +10,7 @@ from tornado import gen
 class Receiver():
 	def __init__(self,callback, ip, port,login, password):
 		print 'New receiver is created'
-		print ip,port,login,password, "end"
+		print ip,port,login,password, "end"  
 		self.state = 'init'
 		self.tcp_stream = None
 		self.buff = ''
@@ -26,6 +26,7 @@ class Receiver():
 		client = tornado.tcpclient.TCPClient()
 		stream = yield client.connect(self.TCP_IP, self.TCP_PORT)
 		callback = self.callback
+		'''
 		self.state = 'connecting'
 		callback('event','connecting')
 		while self.state != 'logged':
@@ -44,6 +45,7 @@ class Receiver():
 				self.state = 'logged'
 				print 'Successfull Connect '
 				callback('event','logged')
+		'''
 		self.tcp_stream = stream
 		def callback(data):
 			print data
