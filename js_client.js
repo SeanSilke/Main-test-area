@@ -14,7 +14,8 @@ jQuery( document ).ready(function( ) {
 		}
 
 		newWs.onopen = function(){
-			$("fieldset").removeAttr("disabled")
+			$("fieldset").first().removeAttr("disabled")
+			//$("fieldset").first().removeAttr("disabled")
 			$('H3').html('Connected to the server')
 		}
 
@@ -26,10 +27,10 @@ jQuery( document ).ready(function( ) {
 				reciever.r_print(message.data)
 			}
 
-			if (message.type == 'event' && message.data == "logged"){
-					var reciever_id = message.id
-					var reciever = recievers_dict[reciever_id]
-					reciever.enable()
+			if (message.type == 'event' && message.data == "logged"){				
+				var reciever_id = message.id
+				var reciever = recievers_dict[reciever_id]
+				reciever.enable()
 			}
 		};
 
@@ -49,7 +50,6 @@ jQuery( document ).ready(function( ) {
 		new reciever_constructor(reciever_id)
 		ws.send(JSON.stringify(msg))
 		reciever_id += 1
-		console.log(reciever_id)
 	}	
 
 	var reciever_constructor = function(reciever_id){
