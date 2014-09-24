@@ -1,5 +1,4 @@
 "use strict";
-
 jQuery( document ).ready(function( ) {
 	var reciever_id = 1;
 	var recievers_dict = {};
