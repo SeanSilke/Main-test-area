@@ -14,7 +14,6 @@ jQuery( document ).ready(function( ) {
 		}
 
 		newWs.onopen = function(){
-			//$("fieldset").first().removeAttr("disabled")
 			$("fieldset").first().removeAttr("disabled")
 			$('H3').html('Connected to the server')
 		}
@@ -24,13 +23,11 @@ jQuery( document ).ready(function( ) {
 			if (message.type == 'send'){
 				var reciever_id = message.id
 				var reciever = recievers_dict[reciever_id]
-				reciever.r_print(message.data)
+				reciever.onmessage(message.data)
 			}
 
-			if (message.type == 'event' && message.data == "logged"){				
-				var reciever_id = message.id
-				var reciever = recievers_dict[reciever_id]
-				reciever.enable()
+			if (message.type == 'event' && message.data == "connected"){
+				console.log(message.id, "connected")
 			}
 		};
 
@@ -40,19 +37,17 @@ jQuery( document ).ready(function( ) {
 	var login = function(){
 
 		var data = {ip: $("#ip").val(),
-				port: Number($("#port").val()),
-				login: $("#login").val(),
-				password: $("#password").val()
-				}
+					port: Number($("#port").val())}
 		var msg = {id: reciever_id,
 					type: 'init',
-					data: data}		
-		new reciever_constructor(reciever_id)
+					data: data}
+
+		new reciever_constructor(reciever_id,$("#login").val(),$("#password").val())
 		ws.send(JSON.stringify(msg))
 		reciever_id += 1
 	}	
 
-	var reciever_constructor = function(reciever_id){
+	var reciever_constructor = function(reciever_id, loing, password){
 
 		var that = this
 		this.dom_elem = $($(".template").html())
@@ -60,7 +55,7 @@ jQuery( document ).ready(function( ) {
 		this.header = this.dom_elem.find(".header")
 		this.header.html("Receiver " + reciever_id)
 
-		this.login_buf = ' '
+		this.login_buf = ''
 		this.state = 'login'
 
 		this.output_field = this.dom_elem.find(".output_field")
@@ -74,16 +69,15 @@ jQuery( document ).ready(function( ) {
 			fieldset.removeAttr( "disabled" )
 		}
 
-		this.r_print = function (data){
+		this.onmessage = function (data){
 			if (this.state == 'login'){
 				this.login_buf += data
-				console.log(this.login_buf)
 				if(this.login_buf.indexOf('login:') >= 0){
-					that.callback('send','a')
+					that.callback('send', loing)
 					this.login_buf = ' '
 				}
 				if (this.login_buf.indexOf('Password:') >= 0) {
-                    that.callback('send','b')
+                    that.callback('send',password)
                     this.login_buf = ''
                 }
                 if (this.login_buf.indexOf('Logged in on') >= 0) {
