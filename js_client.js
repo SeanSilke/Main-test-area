@@ -1,4 +1,13 @@
-"use strict";
+//"use strict";
+
+var njsCompile = function(f) {
+	console.log("Hello njsCompile")
+	var compiler = new NjsCompiler({})
+	var fString = f.toString()
+	var compileCodeText = compiler.compile(fString)
+	return eval("var f ="+compileCodeText+"; f")
+}
+
 jQuery( document ).ready(function( ) {
 	var reciever_id = 1;
 	var recievers_dict = {};
@@ -124,5 +133,4 @@ jQuery( document ).ready(function( ) {
 	
 	$("#login_button").click(login)	
 	$("#default_login_button").click(default_loggin_data)
-
 });
