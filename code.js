@@ -1,11 +1,21 @@
 //"use strict";
 jQuery( document ).ready(function( ) {
 
-	function update(n) {
-		for(var i = 0; i < n; i++) {
-			console.log(i);
-			sleep.yld(1000);
-		}
+	function waitClick(){
+		var elem = document.getElementById("myButton");
+		elem.onclick = new EventNotifier();
+		elem.onclick.wait.yld();
+		sleep.yld(1000)
+		console.log("click")
+	}
+
+	function rnTest(){
+		var promise = new ResultNotifier();
+		var elem = document.getElementById("myButton");
+
+		elem.onclick = function(){promise.fulfill.yld('Hello')}
+		console.log(promise.value.yld())
+		console.log("asdf")
 	}
 
 	var njsCompile = function(f) {
@@ -15,8 +25,12 @@ jQuery( document ).ready(function( ) {
 		return eval("var f ="+compileCodeText+"; f")
 	}
 
-	var update = njsCompile(update)
+//	var waitClick = njsCompile(waitClick)
+//	waitClick()
 
-	update(4)
+	var rnTest = njsCompile(rnTest)
+	rnTest()
+
+
 
 });
