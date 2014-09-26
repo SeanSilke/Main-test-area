@@ -1,14 +1,23 @@
 //"use strict";
 jQuery( document ).ready(function( ) {
 
+	var N = {}
+	N.Njs = {}
+
 	var njsCompile = function(f) {
 		var compiler = new NjsCompiler({})
 		var fString = f.toString()
+		var fString = "var f =" + fString +"; f"
 		var compileCodeText = compiler.compile(fString)
-		return eval("var f ="+compileCodeText+"; f")
+		return eval(compileCodeText)
 	}
 
-	function waitClick(){
+	N.Njs.Compile = function (func) {
+		var compiler = new NjsCompiler({ });
+		return eval(compiler.compile('var f=' + func.toString() + ';\n f;', 'njs_method'));
+	};
+
+	var waitClick = function() {
 		var elem = document.getElementById("myButton");
 		elem.onclick = new EventNotifier();
 		elem.onclick.wait.yld();
@@ -28,7 +37,7 @@ jQuery( document ).ready(function( ) {
 //	var waitClick = njsCompile(waitClick)
 //	waitClick()
 
-	var rnTest = njsCompile(rnTest)
-	rnTest()
+	var waitClick = N.Njs.Compile(waitClick)
+	waitClick()
 
 });
