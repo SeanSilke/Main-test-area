@@ -82,12 +82,12 @@ jQuery( document ).ready(function( ) {
 			fieldset.removeAttr( "disabled" )
 		}
 
-		this.onmessage = njsCompile(function (data){
+		this.onmessage = function (data){
 			if (this.state == "login"){
-						this.resultNotifier.fulfill.yld(data)
+						this.resultNotifier.fulfill(data)
 					}
 			this.output_field.append(data + "<br>");
-		})
+		}
 
 		this.ReadUntil = njsCompile(function (){
 			var promise = this.resultNotifier
