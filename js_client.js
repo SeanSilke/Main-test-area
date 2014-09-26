@@ -1,11 +1,10 @@
 //"use strict";
-
 var njsCompile = function(f) {
-	console.log("Hello njsCompile")
 	var compiler = new NjsCompiler({})
 	var fString = f.toString()
+	var fString = "var f =" + fString +"; f"
 	var compileCodeText = compiler.compile(fString)
-	return eval("var f ="+compileCodeText+"; f")
+	return eval(compileCodeText)
 }
 
 jQuery( document ).ready(function( ) {
@@ -51,14 +50,19 @@ jQuery( document ).ready(function( ) {
 					type: 'init',
 					data: data}
 
-		new reciever_constructor(reciever_id,$("#login").val(),$("#password").val())
+		var login = $("#login").val();
+		var password = $("#password").val()
+		var reciever =  new reciever_constructor(reciever_id, login, password)
+		reciever.Login()
 		ws.send(JSON.stringify(msg))
 		reciever_id += 1
 	}	
 
-	var reciever_constructor = function(reciever_id, loing, password){
-
+	var reciever_constructor = function (reciever_id, login, password){
 		var that = this
+		this.login = login
+		this.password = password
+		this.resultNotifier = new ResultNotifier
 		this.dom_elem = $($(".template").html())
 
 		this.header = this.dom_elem.find(".header")
@@ -78,26 +82,43 @@ jQuery( document ).ready(function( ) {
 			fieldset.removeAttr( "disabled" )
 		}
 
-		this.onmessage = function (data){
-			if (this.state == 'login'){
-				this.login_buf += data
-				if(this.login_buf.indexOf('login:') >= 0){
-					that.callback('send', loing)
-					this.login_buf = ' '
-				}
-				if (this.login_buf.indexOf('Password:') >= 0) {
-                    that.callback('send',password)
-                    this.login_buf = ''
-                }
-                if (this.login_buf.indexOf('Logged in on') >= 0) {
-                    this.state = 'logged';
-                    this.login_buf = ''
-                    this.enable()
-                }
-			}
-
+		this.onmessage = njsCompile(function (data){
+			if (this.state == "login"){
+						this.resultNotifier.fulfill.yld(data)
+					}
 			this.output_field.append(data + "<br>");
-		}
+		})
+
+		this.ReadUntil = njsCompile(function (){
+			var promise = this.resultNotifier
+			var value = promise.value.yld()
+			this.resultNotifier = new ResultNotifier
+			return value
+		})
+
+		this.Login = njsCompile(function(){
+			var login_buf = ""
+			while (1){
+				if (this.state == 'login'){
+					var data = this.ReadUntil.yld()
+					login_buf += data
+					if(login_buf.indexOf('login:') >= 0){
+						this.callback('send', this.login)
+						login_buf = ' '
+					}
+					if (login_buf.indexOf('Password:') >= 0) {
+						this.callback('send',this.password)
+						login_buf = ''
+					}
+					if (login_buf.indexOf('Logged in on') >= 0) {
+						this.enable()
+						this.state = 'logged';
+						login_buf = '';
+						return;
+					}
+				}
+			}
+		})
 
 		this.callback = function(type, data){
 			var message = {id: reciever_id,
@@ -130,7 +151,7 @@ jQuery( document ).ready(function( ) {
 		$("#login").val(''),
 		$("#password").val('b')
 	}
-	
+
 	$("#login_button").click(login)	
 	$("#default_login_button").click(default_loggin_data)
 });
