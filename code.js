@@ -1,6 +1,13 @@
 //"use strict";
 jQuery( document ).ready(function( ) {
 
+	var njsCompile = function(f) {
+		var compiler = new NjsCompiler({})
+		var fString = f.toString()
+		var compileCodeText = compiler.compile(fString)
+		return eval("var f ="+compileCodeText+"; f")
+	}
+
 	function waitClick(){
 		var elem = document.getElementById("myButton");
 		elem.onclick = new EventNotifier();
@@ -18,19 +25,10 @@ jQuery( document ).ready(function( ) {
 		console.log("asdf")
 	}
 
-	var njsCompile = function(f) {
-		var compiler = new NjsCompiler({})
-		var fString = f.toString()
-		var compileCodeText = compiler.compile(fString)
-		return eval("var f ="+compileCodeText+"; f")
-	}
-
 //	var waitClick = njsCompile(waitClick)
 //	waitClick()
 
 	var rnTest = njsCompile(rnTest)
 	rnTest()
-
-
 
 });
