@@ -6,7 +6,7 @@
 		<link href="static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 		<script src="static/bootstrap/js/bootstrap.min.js"></script>
 		<script src="static/njs_compile.js"></script>
-		<script src="js_client.js"></script>
+<!--		<script src="js_client.js"></script> -->
 		<script src="testNetgear.js"></script>
 	</head>
 	<body>
@@ -14,29 +14,27 @@
 
 			<h3>  </h3>
 
-			<fieldset disabled>
-				<div class="form-group" >
-					<div class="row">
-						<div class="col-xs-3">
-							<input type="text" class="form-control" id = 'ip' placeholder="ip">
-						</div>
-						<div class="col-xs-3">
-							<input type="text" class="form-control" id = 'port' placeholder="port">
-						</div>
-						<div class="col-xs-3">
-							<input type="text" class="form-control" id = 'login' placeholder="login">
-						</div>
-						<div class="col-xs-3">
-							<input type="text" class="form-control" id= 'password' placeholder="password">
-						</div>
+			<div class="form-group" >
+				<div class="row">
+					<div class="col-xs-3">
+						<input type="text" class="form-control" id = 'host' placeholder="host">
+					</div>
+					<div class="col-xs-3">
+						<input type="text" class="form-control" id = 'port' placeholder="port">
+					</div>
+					<div class="col-xs-3">
+						<input type="text" class="form-control" id = 'login' placeholder="login">
+					</div>
+					<div class="col-xs-3">
+						<input type="text" class="form-control" id= 'password' placeholder="password">
 					</div>
 				</div>
+			</div>
 
-				<div class="form-group">
-					<button type="button" id="login_button" class="btn btn-default">Login</button>
-					<button type="button" id="default_login_button" class="btn btn-default">default login  data</button>
-				</div>
-			</fieldset>
+			<div class="form-group">
+				<button type="button" id="login_button" class="btn btn-default">Login</button>
+				<button type="button" id="default_login_button" class="btn btn-default">default login  data</button>
+			</div>
 
 			<div class = "main_panel">
 			</div>
@@ -46,7 +44,7 @@
 				<div>
 					<div class = "row">
 						<div class="col-xs-10">
-							<h4 class="header"> Receiver 1 </h4>
+							<h4 class="header"> Receiver </h4>
 						</div>
 						<div class="col-xs-2">
 							<button type="button" class="btn btn-default btn-block close_button">Close</button>
@@ -69,7 +67,9 @@
 						<div class="form-group">
 							<div class="row">
 								<div class="col-md-12">
-									<div class="well output_field"> </div>
+									<div class="well">
+										<pre class="output_field"></pre>
+									</div>
 								</div>
 							</div>
 						</div>
