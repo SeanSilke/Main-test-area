@@ -7,23 +7,27 @@ var njsCompile = function(f) {
 }
 
 
-jQuery( document ).ready(function( ) {
-	var id = 1
 
-	var setReciever = function(){
+
+
+jQuery( document ).ready(function( ) {
+	var i = 1
+
+	var setReciever = njsCompile(function(id){
+		console.log(id)
 		var host = $("#host").val()
 		var port = $("#port").val()
 		var password = $("#password").val()
 		var receiver = new reciever_constructor(host,port,password,id)
-		id += 1
-		receiver.Connect()
+		receiver.Connect.yld()
 		receiver.Read()
-	}
+	})
 
-	$("#login_button").click(setReciever)
+	$("#login_button").click(function(){
+		setReciever(i++);
+	})
 
-
-	var reciever_constructor = function (host,port,password,id){
+	window.reciever_constructor = function (host,port,password,id){
 		var that = this
 		this.id = id
 		this.connected = false
@@ -64,16 +68,16 @@ jQuery( document ).ready(function( ) {
 			fieldset.prop('disabled',true)
 		}
 
-		this.Connect = function(){
+		this.Connect = njsCompile(function(){
 			try{
-				this.channel.Connect()
+				this.channel.Connect.yld()
 				this.connected = true
 				this.enable()
 			}
 			catch(e){
-				this.header.append(" " + e.name)
+				this.header.append("<em> " + e.name + ". " + e.message + "</em>")
 			}
-		}
+		})
 
 		this.Read = njsCompile(function (data){
 			while(this.connected){
