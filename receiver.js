@@ -1,3 +1,4 @@
+// HTML receiver with NetGear channel
 var njsCompile = function(f) {
 	var compiler = new NjsCompiler({})
 	var fString = f.toString()
@@ -6,15 +7,10 @@ var njsCompile = function(f) {
 	return eval(compileCodeText)
 }
 
-
-
-
-
 jQuery( document ).ready(function( ) {
 	var i = 1
 
 	var setReciever = njsCompile(function(id){
-		console.log(id)
 		var host = $("#host").val()
 		var port = $("#port").val()
 		var password = $("#password").val()
