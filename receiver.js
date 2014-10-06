@@ -1,16 +1,8 @@
 // HTML receiver with NetGear channel
-var njsCompile = function(f) {
-	var compiler = new NjsCompiler({})
-	var fString = f.toString()
-	var fString = "var f =" + fString +"; f"
-	var compileCodeText = compiler.compile(fString)
-	return eval(compileCodeText)
-}
-
 jQuery( document ).ready(function( ) {
 	var i = 1
 
-	var setReciever = njsCompile(function(id){
+	var setReciever = N.Njs.Compile(function(id){
 		var host = $("#host").val()
 		var port = $("#port").val()
 		var password = $("#password").val()
@@ -64,7 +56,7 @@ jQuery( document ).ready(function( ) {
 			fieldset.prop('disabled',true)
 		}
 
-		this.Connect = njsCompile(function(){
+		this.Connect = N.Njs.Compile(function(){
 			try{
 				this.channel.Connect.yld()
 				this.connected = true
@@ -75,7 +67,7 @@ jQuery( document ).ready(function( ) {
 			}
 		})
 
-		this.Read = njsCompile(function (data){
+		this.Read = N.Njs.Compile(function (data){
 			while(this.connected){
 				var response = this.channel.Read.yld(1000)
 				this.output_field.append(response);
