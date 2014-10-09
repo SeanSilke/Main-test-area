@@ -1,10 +1,6 @@
-// console.log("Hello I'am client")
-// console.log(N.Njs.Compile)
-// console.log(N.Webio.Connection)
-// console.log(N.Webio.TransportClient)
-
 jQuery( document ).ready(function( ) {
 	window.counterField = $(".counter")
+	window.startButton = $("#startButton")
 })
 
 Create = N.Njs.Compile(function(){
@@ -13,13 +9,6 @@ Create = N.Njs.Compile(function(){
 	var transport = new N.Webio.TransportClient(connection);
 
 	var countDownService = transport.Session.yld({name: "myCountdown"})
-	// console.log("countDownService", countDownService)
-
-	// var res1 = countDownService.Method1.yld();
-	// console.log("res1", res1);
-
-	// var res2 = countDownService.Method1.yld({rabbit: 'hole'})
-	// console.log('res2',res2);
 
 	countDownService.Method2.yld(
 		{
@@ -30,6 +19,16 @@ Create = N.Njs.Compile(function(){
 			)
 		}
 	)
+
+	var starMethod1 = function(Service){
+		var resForMethos1 = Service.Method1.yld() //not tread
+	}
+
+
+	startButton.click(function(){
+		starMethod1(countDownService);
+	})
+
 })
 
 Create()
