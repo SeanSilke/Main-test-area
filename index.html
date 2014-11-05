@@ -5,10 +5,22 @@
 		<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
 	</head>
 	<body>
+		<p>
+			This is the paragraph made
+			to test selectAll method
+		</p>
 		<script type="text/javascript">
+
+			var dataset = [ 5, 10, 15, 20, 25 ];
+
 			d3.select("body")
+			.selectAll("p")
+			.data(dataset)
+			.enter()
 			.append("p")
-			.text("New paragraph!");
+			.text(function(d){return d;});
+
+			console.log(d3.selectAll("p"));
 		</script>
 	</body>
 </html>
