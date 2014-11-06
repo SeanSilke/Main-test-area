@@ -5,10 +5,6 @@
 		<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
 	</head>
 	<body>
-		<p>
-			This is the paragraph made
-			to test selectAll method
-		</p>
 		<script type="text/javascript">
 
 			var dataset = [ 5, 10, 15, 20, 25 ];
@@ -18,7 +14,14 @@
 			.data(dataset)
 			.enter()
 			.append("p")
-			.text(function(d){return d;});
+			.text(function(d){return "The dataset value for this paragraph id - " + d;})
+			.style("color", function(d){
+				if(d > 15){
+					return "red";
+				} else{
+					return "green"
+				}
+			});
 
 			console.log(d3.selectAll("p"));
 		</script>
