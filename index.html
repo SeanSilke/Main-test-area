@@ -3,27 +3,28 @@
 		<meta charset="utf-8">
 		<title>D3 Page Template</title>
 		<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+		<style type="text/css">
+			div.bar {
+				display: inline-block;
+				width: 20px;
+				height: 75px;
+				background-color: teal;
+				margin-right: 2px;
+			}
+		</style>
 	</head>
 	<body>
 		<script type="text/javascript">
 
 			var dataset = [ 5, 10, 15, 20, 25 ];
 
-			d3.select("body")
-			.selectAll("p")
-			.data(dataset)
-			.enter()
-			.append("p")
-			.text(function(d){return "The dataset value for this paragraph id - " + d;})
-			.style("color", function(d){
-				if(d > 15){
-					return "red";
-				} else{
-					return "green"
-				}
-			});
+			var width = 500;
+			var height = 50;
 
-			console.log(d3.selectAll("p"));
+			var svg = d3.select("body")
+						.append("svg")
+						.attr("width", width)
+						.attr("height", height);
 		</script>
 	</body>
 </html>
