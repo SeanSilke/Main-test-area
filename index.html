@@ -1,44 +1,45 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<title>D3 Page Template</title>
+		<title>My d3 Page Template</title>
 		<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
 		<style type="text/css">
-			div.bar {
-				display: inline-block;
-				width: 20px;
-				height: 75px;
-				background-color: teal;
-				margin-right: 2px;
-			}
 		</style>
 	</head>
 	<body>
 		<script type="text/javascript">
+			//Width and height
+			var w = 500;
+			var h = 100;
+			var padding = 20;
 
-			var dataset = [ 5, 10, 13, 19, 21, 25, 22, 18, 15, 13,
-							11, 12, 15, 20, 18, 17, 16, 18, 23, 25 ];
+			var dataset = [
+							[5, 20], [480, 90], [250, 50], [100, 33], [330, 95],
+							[410, 12], [475, 44], [25, 67], [85, 21], [220, 88]
+						  ];
 
-			var svgWidth = 500;
-			var svgHeight = 100;
-			var barPadding = 1;
+			//Create scale functions
+			var xScale = d3.scale.linear()
+								 .domain([0, d3.max(dataset, function(d) { return d[0]; })])
+								 .range([padding, w - padding * 2]);
 
+			var yScale = d3.scale.linear()
+								 .domain([0, d3.max(dataset, function(d) { return d[1]; })])
+								 .range([h - padding, padding]);
+
+			var xAxis = d3.svg.axis()
+							  .scale(xScale)
+							  .orient("bottom");
+
+			//Create SVG element
 			var svg = d3.select("body")
 						.append("svg")
-						.attr("width", svgWidth)
-						.attr("height", svgHeight);
+						.attr("width", w)
+						.attr("height", h);
 
-			svg.selectAll("rect")
-				.data(dataset)
-				.enter()
-				.append("rect")
-				.attr({
-					x: function(d,i){ return i * (svgWidth / dataset.length)},
-					y: function(d){ return svgHeight - d * 4;},
-					width: svgWidth / dataset.length - barPadding,
-					height: function(d){ return d * 4;},
-					fill: function(d){ return "rgb(" + (d * 10) +", 0, 0)";},
-				})
+			svg.append("g")
+			   .call(xAxis);
+
 
 		</script>
 	</body>
