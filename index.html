@@ -1,0 +1,24 @@
+<head>
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.3.js"></script>
+	<script type="text/javascript" src="https://code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+</head>
+<body>	
+	<div class = "main">	
+		<div class="square"> </div>
+		<div class="circle"> </div>
+		<div class="square jewelry"> </div>	
+	</div>
+	<script type="text/javascript">
+		var square = $($(".square")[0])
+		square.mouseleave(function(){
+			$(this).toggleClass("square circle jewelry")
+		})
+
+		var main = $(".main")
+		for (var i = 0; i < 100; i++){
+			main.append(square.clone(true));
+		}	
+
+	</script>
+</body>
