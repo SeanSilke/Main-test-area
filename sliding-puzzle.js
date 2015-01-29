@@ -23,6 +23,80 @@ $(function () {
 	currentTime = {},
 	timerDisplay = container.find("#time").find("span");
 
-	console.log(piece)
+	for (var x = 0, y = aspectH; x < y; x++) {
+		for (var a = 0, b = aspectW; a < b; a++) {
+			var top = pieceH * x,
+				left = pieceW * a;
+			
+			piece.clone()
+				.attr("id", idCounter++)
+				.css({
+					width: pieceW,
+					height: pieceH,
+					position: "absolute",
+					top: top,
+					left: left,
+					backgroundImage: ["url(", path, ")"].join(""),
+					backgroundPosition: [
+						"-", pieceW * a, "px ",
+						"-", pieceH * x, "px"
+					].join("")
+				}).appendTo(imgContainer);
+	
+			positions.push({ top: top, left: left });
+		}
+	}
+
+	img.remove();
+	container.find("#0").remove();
+	positions.shift();
+
+	$("#start").on("click", function (e) {
+		var pieces = imgContainer.children();
+
+        function shuffle(array) {
+            var i = array.length;
+            if (i === 0) {
+                return false;
+            }
+            while (--i) {
+                var j = Math.floor(Math.random() * (i + 1)),
+                    tempi = array[i],
+                    tempj = array[j];
+
+                array[i] = tempj;
+                array[j] = tempi;
+            }
+        }
+
+        shuffle(pieces);
+
+        //set position of shuffled images
+        $.each(pieces, function (i) {
+            pieces.eq(i).css(positions[i]);
+        });
+
+        //replace existing pieces with shuffled pieces
+        pieces.appendTo(imgContainer);
+
+        //make sure empty slot is at position 0 when timer starts
+        empty.top = 0;
+        empty.left = 0;        
+
+        //remove any previous messages
+        container.find("#ui").find("p").not("#time").remove();      		
+
+		pieces.draggable({
+			containment: "parent",
+			grid: [pieceW, pieceH],
+			start: function (e, ui) {
+			},
+			drag: function (e, ui) {
+			},
+			stop: function (e, ui) {
+			}
+		});	        
+	})
+	
 });
 
