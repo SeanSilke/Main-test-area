@@ -1,22 +1,12 @@
 jQuery( document ).ready(function( ) {
 
-	var last = $("#Home");
-	$("#myContainer").html("Home");
-	
-	var navigator = function(id, text){
-		$(id).click(function() {
-			$("#myContainer").html(text);			
-			last.removeClass("active")
-			$(this).addClass("active")
-			last = $(this);			
-		});	
-	};
-	
-	navigator("#Home","Home");
-	navigator("#Profile","Profile");
-	navigator("#Portfolio","Portfolio");
-	
+	$("ul li").click(function(){
+			$('.active').removeClass("active");
+			$(this).addClass("active");
+			var index = $(this).index()
+			var id = $(this).attr('id');
+			$("#myContainer").html(index + " " + id);
+		}
+	)
+
 });
-
-
-
