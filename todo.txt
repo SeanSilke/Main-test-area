@@ -1,2 +1,1 @@
 create event with event handler N.Mixin.Events
-test line
